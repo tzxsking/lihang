@@ -114,6 +114,10 @@
   gap: 14px;
 }
 
+.works-gallery--other .work-column {
+  gap: 16px;
+}
+
 .work-card {
   position: relative;
   width: 100%;
@@ -122,6 +126,12 @@
   background: #121212;
   border-radius: 8px;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.works-gallery--other .work-card {
+  background: transparent;
+  border-radius: 15px;
+  box-shadow: none;
 }
 
 .work-card img {

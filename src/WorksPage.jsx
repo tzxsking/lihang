@@ -53,6 +53,26 @@ const workColumns = [
   ],
 ]
 
+const otherWorkColumns = [
+  [
+    { id: 'other-01', height: 576, image: '/assets/other/other-01.png', alt: '高美基因宣传折页与产品资料设计' },
+    { id: 'other-02', height: 337, image: '/assets/other/other-02.png', alt: '高美基因泛癌早筛大会展板设计' },
+    { id: 'other-03', height: 151, image: '/assets/other/other-03.png', alt: '大宅名品联盟宣传设计' },
+  ],
+  [
+    { id: 'other-04', height: 761, image: '/assets/other/other-04.png', alt: '品牌会员卡与商务物料设计' },
+    { id: 'other-05', height: 427, image: '/assets/other/other-05.png', alt: '高美基因展会与品牌宣传设计' },
+  ],
+  [
+    { id: 'other-06', height: 478, image: '/assets/other/other-06.png', alt: '红色品牌手册与宣传物料设计' },
+    { id: 'other-07', height: 452, image: '/assets/other/other-07.png', alt: '高美基因数字产品界面设计' },
+  ],
+  [
+    { id: 'other-08', height: 607, image: '/assets/other/other-08.png', alt: '高美基因产品手册与检测报告设计' },
+    { id: 'other-09', height: 668, image: '/assets/other/other-09.png', alt: '高美基因 cfDNA 泛癌早筛展板设计' },
+  ],
+]
+
 const categoryProjects = {
   marketing: [
     {
@@ -107,22 +127,18 @@ const categoryProjects = {
   ],
 }
 
-function matchesFilter(item, filter) {
-  if (filter === 'all') return true
-  if (filter === 'other') return item.category !== 'visual'
-  return item.category === filter
-}
-
 function getInitialFilter() {
   const category = new URLSearchParams(window.location.search).get('category')
-  const filters = ['all', 'other', ...categories.map((item) => item.id)]
+  const filters = ['all', 'other', ...Object.keys(categoryProjects)]
 
+  if (category === 'visual') return 'all'
   return filters.includes(category) ? category : 'all'
 }
 
 function WorksPage() {
   const [activeFilter, setActiveFilter] = useState(getInitialFilter)
   const featuredProjects = categoryProjects[activeFilter]
+  const activeWorkColumns = activeFilter === 'other' ? otherWorkColumns : workColumns
 
   return (
     <main className="works-page">
@@ -134,10 +150,18 @@ function WorksPage() {
         <nav className="works-sidebar" aria-label="作品分类">
           {categories.map((category) => (
             <button
-              className={activeFilter === category.id ? 'is-active' : ''}
+              className={
+                category.id === 'visual'
+                  ? ['all', 'other'].includes(activeFilter) ? 'is-active' : ''
+                  : activeFilter === category.id ? 'is-active' : ''
+              }
               type="button"
-              aria-pressed={activeFilter === category.id}
-              onClick={() => setActiveFilter(category.id)}
+              aria-pressed={
+                category.id === 'visual'
+                  ? ['all', 'other'].includes(activeFilter)
+                  : activeFilter === category.id
+              }
+              onClick={() => setActiveFilter(category.id === 'visual' ? 'all' : category.id)}
               key={category.id}
             >
               {category.label}
@@ -202,18 +226,18 @@ function WorksPage() {
                 </button>
               </div>
 
-              <div className="works-gallery">
-                {workColumns.map((column, columnIndex) => (
+              <div className={activeFilter === 'other' ? 'works-gallery works-gallery--other' : 'works-gallery'}>
+                {activeWorkColumns.map((column, columnIndex) => (
                   <div className="work-column" key={`column-${columnIndex + 1}`}>
-                    {column.filter((item) => matchesFilter(item, activeFilter)).map((item, itemIndex) => (
+                    {column.map((item, itemIndex) => (
                       <figure
                         className="work-card"
                         style={{ aspectRatio: `275 / ${item.height}` }}
                         key={item.id}
                       >
                         <img
-                          src={assetUrl(`/assets/works/work-${String(item.id).padStart(2, '0')}.png`)}
-                          alt={`刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
+                          src={assetUrl(item.image || `/assets/works/work-${String(item.id).padStart(2, '0')}.png`)}
+                          alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
                           loading={itemIndex < 2 ? 'eager' : 'lazy'}
                           decoding="async"
                         />
