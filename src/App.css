@@ -437,24 +437,28 @@ main {
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 56px;
+  grid-template-columns: repeat(3, minmax(0, 384px));
+  gap: 60px;
+  width: min(1272px, calc(100% - 40px));
   margin-top: 100px;
 }
 
 .project-card {
   position: relative;
-  aspect-ratio: 1.18 / 1;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
+  aspect-ratio: 384 / 300;
+  overflow: visible;
+  background: transparent;
   border-radius: 15px;
   transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
 .project-card img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 15px;
 }
 
 .project-card--tilt-left,
@@ -462,8 +466,20 @@ main {
   transform: rotate(-6.73deg);
 }
 
+.project-card--tilt-left::before,
+.project-card--tilt-right::before {
+  position: absolute;
+  z-index: 0;
+  inset: -5% -2.2%;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  content: '';
+  pointer-events: none;
+}
+
 .project-card--neutral {
   display: grid;
+  overflow: hidden;
   color: #313131;
   background: #e0e0e0;
   font-size: 18px;
@@ -583,7 +599,9 @@ main {
   }
 
   .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 28px;
+    width: min(1200px, calc(100% - 40px));
   }
 
   .contact-layout {
