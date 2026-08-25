@@ -459,11 +459,8 @@ main {
   height: 100%;
   object-fit: cover;
   border-radius: 15px;
-}
-
-.project-card--tilt-left,
-.project-card--tilt-right {
-  transform: rotate(-6.73deg);
+  transform: rotate(0deg);
+  transition: transform 260ms ease, filter 220ms ease;
 }
 
 .project-card--tilt-left::before,
@@ -475,6 +472,7 @@ main {
   background: rgba(255, 255, 255, 0.1);
   content: '';
   pointer-events: none;
+  transform: rotate(-6.73deg);
 }
 
 .project-card--neutral {
@@ -488,8 +486,12 @@ main {
 
 .project-card:hover {
   z-index: 2;
-  box-shadow: 0 24px 55px rgba(39, 80, 155, 0.2);
-  transform: rotate(0deg) translateY(-8px);
+}
+
+.project-card--tilt-left:hover img,
+.project-card--tilt-right:hover img {
+  filter: brightness(1.06);
+  transform: rotate(-6.73deg);
 }
 
 .contact-section {
@@ -756,11 +758,6 @@ main {
     gap: 42px;
     width: min(100% - 54px, 430px);
     margin-top: 60px;
-  }
-
-  .project-card--tilt-left,
-  .project-card--tilt-right {
-    transform: rotate(-3deg);
   }
 
   .contact-section {
