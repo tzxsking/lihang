@@ -6,7 +6,8 @@ html {
   color: #fff;
   background: #000;
   scroll-behavior: smooth;
-  scrollbar-color: #334d7a #050505;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body {
@@ -19,6 +20,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 button,
