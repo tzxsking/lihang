@@ -64,11 +64,13 @@ const projects = [
     image: 'project-aigc-1',
     width: 960,
     height: 773,
+    category: 'marketing',
     className: 'project-card project-card--tilt-left',
   },
   {
     title: '品牌视觉系统',
     image: null,
+    category: 'visual',
     className: 'project-card project-card--neutral',
   },
   {
@@ -76,6 +78,7 @@ const projects = [
     image: 'project-aigc-2',
     width: 960,
     height: 539,
+    category: 'aigc',
     className: 'project-card project-card--tilt-right',
   },
 ]
@@ -222,7 +225,7 @@ function App() {
           {projects.map((project) => (
             <a
               className={project.className}
-              href={appUrl({ search: '?view=works' })}
+              href={appUrl({ search: `?view=works&category=${project.category}` })}
               aria-label={`查看${project.title}`}
               key={project.title}
             >
