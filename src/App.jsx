@@ -68,10 +68,12 @@ const projects = [
     className: 'project-card project-card--tilt-left',
   },
   {
-    title: '品牌视觉系统',
-    image: null,
+    title: '视觉平面手记',
+    image: 'project-visual',
+    width: 960,
+    height: 748,
     category: 'visual',
-    className: 'project-card project-card--neutral',
+    className: 'project-card project-card--tilt-center',
   },
   {
     title: 'AI 协同创作系列',
