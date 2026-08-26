@@ -466,7 +466,8 @@ main {
 }
 
 .project-card--tilt-left::before,
-.project-card--tilt-right::before {
+.project-card--tilt-right::before,
+.project-card--neutral::before {
   position: absolute;
   z-index: 0;
   inset: -5% -2.2%;
@@ -479,11 +480,16 @@ main {
 
 .project-card--neutral {
   display: grid;
-  overflow: hidden;
+  overflow: visible;
   color: #313131;
   background: #e0e0e0;
   font-size: 18px;
   place-items: center;
+}
+
+.project-card--neutral span {
+  position: relative;
+  z-index: 1;
 }
 
 .project-card:hover {
