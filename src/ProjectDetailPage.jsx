@@ -2,6 +2,75 @@ import SiteHeader from './components/SiteHeader'
 import { appUrl, assetUrl } from './utils/paths'
 import './project-detail.css'
 
+const detailImageDimensions = {
+  '/assets/marketing-details/marketing-01-showcase.png': [4000, 3114],
+  '/assets/marketing-details/marketing-02-08.png': [1512, 756],
+  '/assets/marketing-details/marketing-02-15.png': [1512, 756],
+  '/assets/marketing-details/marketing-03-signin.png': [2363, 1477],
+  '/assets/marketing-details/marketing-03-stage.png': [4096, 2048],
+  '/assets/marketing-details/marketing-04-dm-01.png': [4096, 2780],
+  '/assets/marketing-details/marketing-04-dm-02.png': [4096, 2780],
+  '/assets/marketing-details/marketing-04-general.png': [4096, 2320],
+  '/assets/marketing-details/marketing-04-sleep-display.png': [1639, 4096],
+  '/assets/marketing-details/marketing-04-sleep-dm-01.png': [4096, 2779],
+  '/assets/marketing-details/marketing-04-sleep-dm-02.png': [4096, 2779],
+  '/assets/marketing-details/marketing-04-sofa-display.png': [1639, 4096],
+  '/assets/marketing-details/marketing-05-kv-01.png': [2880, 1620],
+  '/assets/marketing-details/marketing-05-kv-02.png': [2880, 1620],
+  '/assets/marketing-details/marketing-05-poster-center.png': [1863, 2964],
+  '/assets/marketing-details/marketing-05-poster-left.png': [1863, 2964],
+  '/assets/marketing-details/marketing-05-poster-right.png': [1863, 2964],
+  '/assets/marketing-details/marketing-05-wall.png': [4096, 2048],
+  '/assets/aigc-details/aigc-01-01.png': [2560, 2595],
+  '/assets/aigc-details/aigc-01-02.png': [2560, 1865],
+  '/assets/aigc-details/aigc-01-03.png': [2560, 2242],
+  '/assets/aigc-details/aigc-01-04.png': [1920, 999],
+  '/assets/aigc-details/aigc-01-05.png': [1920, 1041],
+  '/assets/aigc-details/aigc-01-06.png': [1920, 1645],
+  '/assets/aigc-details/aigc-01-07.png': [1645, 4096],
+  '/assets/aigc-details/aigc-01-08.png': [2560, 2166],
+  '/assets/aigc-details/aigc-01-09.png': [2564, 1646],
+  '/assets/aigc-details/aigc-01-10.png': [1920, 3036],
+  '/assets/aigc-details/aigc-01-11.png': [1920, 1625],
+  '/assets/aigc-details/aigc-01-12.png': [1920, 3256],
+  '/assets/aigc-details/aigc-01-13.png': [2560, 4094],
+  '/assets/aigc-details/aigc-01-14.png': [2560, 1702],
+  '/assets/package-details/package-01-gallery-01.jpg': [900, 492],
+  '/assets/package-details/package-01-gallery-02.jpg': [900, 1104],
+  '/assets/package-details/package-01-gallery-03.png': [900, 766],
+  '/assets/package-details/package-01-hero.jpg': [900, 418],
+  '/assets/package-details/package-02-gallery-01.jpg': [900, 668],
+  '/assets/package-details/package-02-gallery-02.jpg': [900, 866],
+  '/assets/package-details/package-02-gallery-03.jpg': [900, 875],
+  '/assets/package-details/package-02-hero.jpg': [900, 418],
+  '/assets/package-details/package-03-gallery-01.jpg': [900, 918],
+  '/assets/package-details/package-03-gallery-02.jpg': [900, 624],
+  '/assets/package-details/package-03-gallery-03.jpg': [900, 687],
+  '/assets/package-details/package-03-hero.jpg': [900, 637],
+}
+
+const fullDetailImageSizes = '(max-width: 760px) calc(100vw - 28px), 900px'
+const columnDetailImageSizes = '(max-width: 760px) calc((100vw - 48px) / 3), 296px'
+
+function detailImageProps(source, { eager = false, sizes = fullDetailImageSizes } = {}) {
+  const [width, height] = detailImageDimensions[source]
+  const [, , group, filename] = source.split('/')
+  const basename = filename.replace(/\.[^.]+$/, '')
+  const [smallWidth, largeWidth] = group === 'package-details' ? [600, 900] : [640, 1440]
+  const optimizedBase = `/assets/optimized/details/${group}/${basename}`
+
+  return {
+    src: assetUrl(`${optimizedBase}-${smallWidth}.webp`),
+    srcSet: `${assetUrl(`${optimizedBase}-${smallWidth}.webp`)} ${smallWidth}w, ${assetUrl(`${optimizedBase}-${largeWidth}.webp`)} ${largeWidth}w`,
+    sizes,
+    width,
+    height,
+    loading: eager ? 'eager' : 'lazy',
+    fetchPriority: eager ? 'high' : undefined,
+    decoding: 'async',
+  }
+}
+
 const projectDetails = {
   'marketing-01': {
     type: 'marketing',
@@ -212,14 +281,24 @@ function MarketingDetail({ project }) {
       {!project.galleryOnly && <MarketingStory project={project} />}
 
       <div className="marketing-detail-gallery">
-        {project.gallery.map((image) => (
-          <figure
-            className={image.className ?? (project.threeColumnGallery ? '' : 'is-full')}
-            key={image.src}
-          >
-            <img src={assetUrl(image.src)} alt={image.alt} loading="lazy" decoding="async" />
-          </figure>
-        ))}
+        {project.gallery.map((image, imageIndex) => {
+          const isColumnImage = project.threeColumnGallery && !image.className
+
+          return (
+            <figure
+              className={image.className ?? (project.threeColumnGallery ? '' : 'is-full')}
+              key={image.src}
+            >
+              <img
+                {...detailImageProps(image.src, {
+                  eager: imageIndex === 0,
+                  sizes: isColumnImage ? columnDetailImageSizes : fullDetailImageSizes,
+                })}
+                alt={image.alt}
+              />
+            </figure>
+          )
+        })}
       </div>
 
       {!project.galleryOnly && (
@@ -270,7 +349,11 @@ function ProjectDetailPage({ projectId }) {
 
       <article className="project-detail-content">
         <h1 className="project-detail-title">{project.title}</h1>
-        <img className="project-detail-hero" src={assetUrl(project.hero)} alt={`${project.title}主视觉`} />
+        <img
+          className="project-detail-hero"
+          {...detailImageProps(project.hero, { eager: true })}
+          alt={`${project.title}主视觉`}
+        />
 
         <div className="project-detail-story">
           <section className="project-detail-story__row" aria-labelledby="brand-background-title">
@@ -292,7 +375,7 @@ function ProjectDetailPage({ projectId }) {
         >
           {project.gallery.map((image) => (
             <figure className={image.className ?? ''} key={image.src}>
-              <img src={assetUrl(image.src)} alt={image.alt} loading="lazy" decoding="async" />
+              <img {...detailImageProps(image.src)} alt={image.alt} />
             </figure>
           ))}
         </div>
