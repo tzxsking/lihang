@@ -61,7 +61,9 @@ const skills = [
 const projects = [
   {
     title: '活动运营设计',
-    image: '/assets/project-aigc-1.png',
+    image: 'project-aigc-1',
+    width: 960,
+    height: 773,
     className: 'project-card project-card--tilt-left',
   },
   {
@@ -71,10 +73,16 @@ const projects = [
   },
   {
     title: 'AI 协同创作系列',
-    image: '/assets/project-aigc-2.png',
+    image: 'project-aigc-2',
+    width: 960,
+    height: 539,
     className: 'project-card project-card--tilt-right',
   },
 ]
+
+function homeImage(path) {
+  return assetUrl(`/assets/optimized/home/${path}`)
+}
 
 function SectionHeading({ eyebrow, title }) {
   return (
@@ -89,7 +97,16 @@ function ProfileCard() {
   return (
     <aside className="profile-card">
       <div className="portrait-wrap">
-        <img src={assetUrl('/assets/profile.png')} alt="刘航的形象照" />
+        <img
+          src={homeImage('profile-400.webp')}
+          srcSet={`${homeImage('profile-400.webp')} 400w, ${homeImage('profile-800.webp')} 800w`}
+          sizes="274px"
+          width={800}
+          height={436}
+          alt="刘航的形象照"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
 
       <div className="profile-facts">
@@ -167,7 +184,19 @@ function App() {
       </div>
 
       <section className="hero" id="home">
-        <img className="hero-art" src={assetUrl('/assets/hero-texture.png')} alt="" aria-hidden="true" />
+        <img
+          className="hero-art"
+          src={homeImage('hero-texture-1620.webp')}
+          srcSet={`${homeImage('hero-texture-640.webp')} 640w, ${homeImage('hero-texture-1620.webp')} 1620w`}
+          sizes="(max-width: 760px) 640px, (max-width: 1000px) 900px, max(100vw, 1440px)"
+          width={1620}
+          height={2880}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+        />
         <div className="hero-content">
           <h1>Portfolio</h1>
           <p className="identity">刘航&nbsp;&nbsp; 视觉设计师</p>
@@ -197,7 +226,18 @@ function App() {
               aria-label={`查看${project.title}`}
               key={project.title}
             >
-              {project.image ? <img src={assetUrl(project.image)} alt={project.title} /> : <span>{project.title}</span>}
+              {project.image ? (
+                <img
+                  src={homeImage(`${project.image}-480.webp`)}
+                  srcSet={`${homeImage(`${project.image}-480.webp`)} 480w, ${homeImage(`${project.image}-960.webp`)} 960w`}
+                  sizes="(max-width: 760px) calc(100vw - 64px), (max-width: 1320px) calc((100vw - 136px) / 3), 384px"
+                  width={project.width}
+                  height={project.height}
+                  alt={project.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : <span>{project.title}</span>}
             </a>
           ))}
         </div>

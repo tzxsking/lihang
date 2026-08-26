@@ -127,6 +127,14 @@ const categoryProjects = {
   ],
 }
 
+function responsiveImageSet(basePath, smallWidth, largeWidth) {
+  return `${assetUrl(`${basePath}-${smallWidth}.webp`)} ${smallWidth}w, ${assetUrl(`${basePath}-${largeWidth}.webp`)} ${largeWidth}w`
+}
+
+function imageName(path) {
+  return path.split('/').pop().replace(/\.[^.]+$/, '')
+}
+
 function getInitialFilter() {
   const category = new URLSearchParams(window.location.search).get('category')
   const filters = ['all', 'other', ...Object.keys(categoryProjects)]
@@ -176,10 +184,20 @@ function WorksPage() {
           {featuredProjects ? (
             <div className="category-project-grid">
               {featuredProjects.map((project) => {
+                const optimizedBase = `/assets/optimized/categories/${imageName(project.image)}`
                 const card = (
                   <figure className="category-project-card">
                     <div className="category-project-card__image">
-                      <img src={assetUrl(project.image)} alt={project.title} decoding="async" />
+                      <img
+                        src={assetUrl(`${optimizedBase}-340.webp`)}
+                        srcSet={responsiveImageSet(optimizedBase, 340, 680)}
+                        sizes="(max-width: 760px) calc(100vw - 60px), 340px"
+                        width={340}
+                        height={288}
+                        alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
                     <figcaption>{project.title}</figcaption>
                   </figure>
@@ -229,20 +247,34 @@ function WorksPage() {
               <div className={activeFilter === 'other' ? 'works-gallery works-gallery--other' : 'works-gallery'}>
                 {activeWorkColumns.map((column, columnIndex) => (
                   <div className="work-column" key={`column-${columnIndex + 1}`}>
-                    {column.map((item, itemIndex) => (
-                      <figure
-                        className="work-card"
-                        style={{ aspectRatio: `275 / ${item.height}` }}
-                        key={item.id}
-                      >
-                        <img
-                          src={assetUrl(item.image || `/assets/works/work-${String(item.id).padStart(2, '0')}.png`)}
-                          alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
-                          loading={itemIndex < 2 ? 'eager' : 'lazy'}
-                          decoding="async"
-                        />
-                      </figure>
-                    ))}
+                    {column.map((item, itemIndex) => {
+                      const isOtherWork = Boolean(item.image)
+                      const id = isOtherWork ? item.id : `work-${String(item.id).padStart(2, '0')}`
+                      const optimizedBase = `/assets/optimized/${isOtherWork ? 'other' : 'works'}/${id}`
+                      const smallWidth = isOtherWork ? 180 : 360
+                      const largeWidth = isOtherWork ? 275 : 640
+                      const isFirstInColumn = itemIndex === 0
+
+                      return (
+                        <figure
+                          className="work-card"
+                          style={{ aspectRatio: `275 / ${item.height}` }}
+                          key={item.id}
+                        >
+                          <img
+                            src={assetUrl(`${optimizedBase}-${smallWidth}.webp`)}
+                            srcSet={responsiveImageSet(optimizedBase, smallWidth, largeWidth)}
+                            sizes="(max-width: 760px) calc((100vw - 40px) / 2), 275px"
+                            width={275}
+                            height={item.height}
+                            alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
+                            loading={isFirstInColumn ? 'eager' : 'lazy'}
+                            fetchPriority={isFirstInColumn ? 'high' : undefined}
+                            decoding="async"
+                          />
+                        </figure>
+                      )
+                    })}
                   </div>
                 ))}
               </div>
