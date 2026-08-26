@@ -1,14 +1,18 @@
 .works-page {
-  min-height: 100vh;
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  flex-direction: column;
   color: #fff;
   background: #000;
-  overflow: clip;
+  overflow: hidden;
 }
 
 .works-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 30;
+  flex: 0 0 96px;
   background: #000;
 }
 
@@ -18,18 +22,20 @@
 
 .works-shell {
   display: grid;
+  min-height: 0;
   grid-template-columns: 144px minmax(0, 1fr);
+  flex: 1 1 auto;
   gap: 60px;
   width: min(1384px, calc(100% - 40px));
   margin-inline: auto;
-  padding: 38px 0 120px;
+  padding: 38px 0 0;
+  overflow: hidden;
 }
 
 .works-sidebar {
-  position: sticky;
-  top: 157px;
+  position: relative;
   display: flex;
-  height: 1080px;
+  height: calc(100% - 61px);
   align-self: start;
   flex-direction: column;
   gap: 28px;
@@ -63,6 +69,7 @@
 
 .works-tabs {
   display: flex;
+  flex: 0 0 61px;
   align-items: flex-start;
   gap: 22px;
   height: 61px;
@@ -70,7 +77,10 @@
 }
 
 .works-main {
+  display: flex;
   min-width: 0;
+  min-height: 0;
+  flex-direction: column;
 }
 
 .works-main--projects {
@@ -100,11 +110,27 @@
   transform: scaleX(1);
 }
 
+.works-gallery-viewport {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
 .works-gallery {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 275px));
   gap: 16px;
   align-items: start;
+  padding-bottom: 120px;
+}
+
+.works-gallery-viewport::-webkit-scrollbar,
+.category-project-grid::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .work-column {
@@ -148,9 +174,16 @@
 
 .category-project-grid {
   display: grid;
+  min-height: 0;
   grid-template-columns: repeat(3, minmax(0, 372px));
+  flex: 1 1 auto;
   gap: 16px;
   align-items: start;
+  align-content: start;
+  padding-bottom: 120px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
 }
 
 .category-project-card {
@@ -228,22 +261,27 @@
 }
 
 @media (max-width: 760px) {
+  .works-header {
+    flex-basis: 68px;
+  }
+
   .works-header .site-header {
     min-height: 68px;
   }
 
   .works-shell {
-    display: block;
+    display: flex;
     width: 100%;
-    padding: 0 0 80px;
+    flex-direction: column;
+    padding: 0;
   }
 
   .works-sidebar {
-    top: 68px;
     z-index: 20;
     display: flex;
     width: 100%;
     height: auto;
+    flex: 0 0 auto;
     flex-direction: row;
     gap: 6px;
     margin: 0;
@@ -267,6 +305,8 @@
   }
 
   .works-main {
+    min-height: 0;
+    flex: 1 1 auto;
     width: min(100% - 28px, 560px);
     margin-inline: auto;
   }
@@ -289,6 +329,7 @@
     display: block;
     column-count: 2;
     column-gap: 12px;
+    padding-bottom: 80px;
   }
 
   .work-column {
@@ -304,6 +345,7 @@
   .category-project-grid {
     grid-template-columns: 1fr;
     gap: 12px;
+    padding-bottom: 80px;
   }
 
   .category-project-card {

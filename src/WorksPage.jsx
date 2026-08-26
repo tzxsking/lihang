@@ -244,39 +244,41 @@ function WorksPage() {
                 </button>
               </div>
 
-              <div className={activeFilter === 'other' ? 'works-gallery works-gallery--other' : 'works-gallery'}>
-                {activeWorkColumns.map((column, columnIndex) => (
-                  <div className="work-column" key={`column-${columnIndex + 1}`}>
-                    {column.map((item, itemIndex) => {
-                      const isOtherWork = Boolean(item.image)
-                      const id = isOtherWork ? item.id : `work-${String(item.id).padStart(2, '0')}`
-                      const optimizedBase = `/assets/optimized/${isOtherWork ? 'other' : 'works'}/${id}`
-                      const smallWidth = isOtherWork ? 180 : 360
-                      const largeWidth = isOtherWork ? 275 : 640
-                      const isFirstInColumn = itemIndex === 0
+              <div className="works-gallery-viewport">
+                <div className={activeFilter === 'other' ? 'works-gallery works-gallery--other' : 'works-gallery'}>
+                  {activeWorkColumns.map((column, columnIndex) => (
+                    <div className="work-column" key={`column-${columnIndex + 1}`}>
+                      {column.map((item, itemIndex) => {
+                        const isOtherWork = Boolean(item.image)
+                        const id = isOtherWork ? item.id : `work-${String(item.id).padStart(2, '0')}`
+                        const optimizedBase = `/assets/optimized/${isOtherWork ? 'other' : 'works'}/${id}`
+                        const smallWidth = isOtherWork ? 180 : 360
+                        const largeWidth = isOtherWork ? 275 : 640
+                        const isFirstInColumn = itemIndex === 0
 
-                      return (
-                        <figure
-                          className="work-card"
-                          style={{ aspectRatio: `275 / ${item.height}` }}
-                          key={item.id}
-                        >
-                          <img
-                            src={assetUrl(`${optimizedBase}-${smallWidth}.webp`)}
-                            srcSet={responsiveImageSet(optimizedBase, smallWidth, largeWidth)}
-                            sizes="(max-width: 760px) calc((100vw - 40px) / 2), 275px"
-                            width={275}
-                            height={item.height}
-                            alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
-                            loading={isFirstInColumn ? 'eager' : 'lazy'}
-                            fetchPriority={isFirstInColumn ? 'high' : undefined}
-                            decoding="async"
-                          />
-                        </figure>
-                      )
-                    })}
-                  </div>
-                ))}
+                        return (
+                          <figure
+                            className="work-card"
+                            style={{ aspectRatio: `275 / ${item.height}` }}
+                            key={item.id}
+                          >
+                            <img
+                              src={assetUrl(`${optimizedBase}-${smallWidth}.webp`)}
+                              srcSet={responsiveImageSet(optimizedBase, smallWidth, largeWidth)}
+                              sizes="(max-width: 760px) calc((100vw - 40px) / 2), 275px"
+                              width={275}
+                              height={item.height}
+                              alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
+                              loading={isFirstInColumn ? 'eager' : 'lazy'}
+                              fetchPriority={isFirstInColumn ? 'high' : undefined}
+                              decoding="async"
+                            />
+                          </figure>
+                        )
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
             </>
           )}
