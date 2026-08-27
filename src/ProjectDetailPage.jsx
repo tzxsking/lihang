@@ -35,6 +35,24 @@ const detailImageDimensions = {
   '/assets/aigc-details/aigc-01-12.png': [1920, 3256],
   '/assets/aigc-details/aigc-01-13.png': [2560, 4094],
   '/assets/aigc-details/aigc-01-14.png': [2560, 1702],
+  '/assets/aigc-details/aigc-02-01.png': [1000, 620],
+  '/assets/aigc-details/aigc-02-02.png': [1500, 805],
+  '/assets/aigc-details/aigc-02-03.png': [1500, 712],
+  '/assets/aigc-details/aigc-02-04.png': [1500, 1081],
+  '/assets/aigc-details/aigc-02-05.png': [1500, 601],
+  '/assets/aigc-details/aigc-02-06.png': [1500, 856],
+  '/assets/aigc-details/aigc-02-07.png': [1500, 375],
+  '/assets/aigc-details/aigc-02-08.png': [1500, 375],
+  '/assets/aigc-details/aigc-02-09.png': [1500, 421],
+  '/assets/aigc-details/aigc-02-10.png': [1500, 421],
+  '/assets/aigc-details/aigc-02-11.png': [1500, 421],
+  '/assets/aigc-details/aigc-02-12.png': [1500, 485],
+  '/assets/aigc-details/aigc-02-13.png': [1500, 653],
+  '/assets/aigc-details/aigc-02-14.png': [1500, 421],
+  '/assets/aigc-details/aigc-02-15.png': [1500, 636],
+  '/assets/aigc-details/aigc-02-16.png': [1500, 635],
+  '/assets/aigc-details/aigc-02-17.png': [1500, 514],
+  '/assets/aigc-details/aigc-02-18.png': [1500, 421],
   '/assets/package-details/package-01-gallery-01.jpg': [900, 492],
   '/assets/package-details/package-01-gallery-02.jpg': [900, 1104],
   '/assets/package-details/package-01-gallery-03.png': [900, 766],
@@ -56,7 +74,9 @@ function detailImageProps(source, { eager = false, sizes = fullDetailImageSizes 
   const [width, height] = detailImageDimensions[source]
   const [, , group, filename] = source.split('/')
   const basename = filename.replace(/\.[^.]+$/, '')
-  const [smallWidth, largeWidth] = group === 'package-details' ? [600, 900] : [640, 1440]
+  const [smallWidth, largeWidth] = group === 'package-details'
+    ? [600, 900]
+    : [640, Math.min(width, 1440)]
   const optimizedBase = `/assets/optimized/details/${group}/${basename}`
 
   return {
@@ -176,6 +196,20 @@ const projectDetails = {
       { src: '/assets/aigc-details/aigc-01-13.png', alt: '葱鸡餐饮品牌设计展示十三' },
       { src: '/assets/aigc-details/aigc-01-14.png', alt: '葱鸡餐饮品牌设计展示十四' },
     ],
+  },
+  'aigc-02': {
+    type: 'aigc-process',
+    title: '年会主视觉AI辅助过程',
+    hero: '/assets/aigc-details/aigc-02-01.png',
+    background:
+      '主题为“聚变，创未来 2026 年年度荣誉盛典”，整体年会旨在回顾总结上一年度工作，发布 26 年的工作方针；表彰 25 年战略实施过程中发挥重要作用的个人或团体，树先锋，立榜样，达到鼓舞员工的作用；同时提升员工归属感与凝聚力，激扬团队士气，为新一年度的工作奏响序曲。',
+    concept: [
+      '本次项目由多人协作完成 3 版主视觉，在主视觉选定后延展其他物料，时间紧任务重。',
+      '在分析项目背景与业务诉求后，设计侧决定 3 版方案从科技、活力的不同侧重程度展开表现，并在创意构成、表现手法及色调氛围方面做差异化设计；',
+      '我个人设计的方向整体偏科技，兼顾年会的人文属性，画面中露出员工，传达活力、力量与感召力，激昂员工奋进情绪；',
+    ],
+    businessRequest:
+      '本次年会不涉及工作汇报，整体定调偏欢快、娱乐，需求方团队希望主视觉整体体现科技与活力氛围。',
   },
   'package-01': {
     title: '靖西-百香果（大众版）',
@@ -319,6 +353,149 @@ function MarketingDetail({ project }) {
   )
 }
 
+function AigcProcessFigure({ imageNumber }) {
+  const number = String(imageNumber).padStart(2, '0')
+  const source = `/assets/aigc-details/aigc-02-${number}.png`
+
+  return (
+    <figure className="aigc-process-figure">
+      <img
+        {...detailImageProps(source)}
+        alt={`年会主视觉 AI 辅助设计过程图 ${imageNumber}`}
+      />
+    </figure>
+  )
+}
+
+function AigcProcessDetail({ project }) {
+  return (
+    <article className="project-detail-content aigc-process-detail">
+      <h1 className="project-detail-title">{project.title}</h1>
+      <img
+        className="aigc-process-hero"
+        {...detailImageProps(project.hero, { eager: true })}
+        alt="年会主视觉 AI 辅助设计终稿"
+      />
+
+      <div className="aigc-process-intro">
+        <section>
+          <p className="aigc-process-label">
+            项目背景 <span>Project Introduction</span>
+          </p>
+          <p>{project.background}</p>
+        </section>
+
+        <section>
+          <p className="aigc-process-label">
+            设计思路 <span>Design Concept</span>
+          </p>
+          <div>
+            {project.concept.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </section>
+
+        <section>
+          <p className="aigc-process-label">业务诉求</p>
+          <p>{project.businessRequest}</p>
+        </section>
+      </div>
+
+      <div className="aigc-process-flow">
+        <section className="aigc-process-step">
+          <p>给 ChatGPT 指定角色，担当专业人士，辅助构思视觉创意</p>
+          <AigcProcessFigure imageNumber={2} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>结合业务诉求与设计目标，个人分析与 ChatGPT 共同脑暴出的设计思路，提取重点关键词如下：</p>
+          <AigcProcessFigure imageNumber={3} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>构建情绪板：</p>
+          <AigcProcessFigure imageNumber={4} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>MJ 生成整体画面氛围｜分层设计 后期合成</p>
+          <AigcProcessFigure imageNumber={5} />
+          <div className="aigc-process-prompt">
+            <p>使用 /describe 反推关键词（单次效果不准确时，可用近似图多次反推，综合整理得到最终关键词）</p>
+            <p>关键词：</p>
+            <p>https://s.mj.run/XTZNgvpt7bU Gorgeous and rich paper ribbons flow inward, like the gentle waves on the river, rhythmic lines, abstract paper ribbons, graceful and dynamic, bold color line style, vast space, low angle, deep blue, sky blue, light orange yellow and gold ribbons, black background, 32k uhd --ar 4:1 --s 750 --iw 1.2 --niji</p>
+            <p>华丽丰富的纸带向内流动，如河面上的轻柔波浪，线条富有节奏感，抽象的纸带，优美动感，大胆的色彩线条风格，广阔的空间，低角度，深蓝、天蓝、浅橙黄和金色的纸带，黑色背景，32k uhd --ar 4:1 --s 750 --iw 1.2 --niji</p>
+          </div>
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>初步得到以下画面</p>
+          <AigcProcessFigure imageNumber={6} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>选择 V3，修改画面比例继续优化，挑选其中效果较好的得到下列 3 张</p>
+          <AigcProcessFigure imageNumber={7} />
+          <AigcProcessFigure imageNumber={8} />
+          <AigcProcessFigure imageNumber={9} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>3 张画面各有优劣，第 3 张整体质感较好，在 PS 中融合 1、2，得到以下初步画面背景</p>
+          <AigcProcessFigure imageNumber={10} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>检查画面中流线缺漏与不完整部分，找到局部较好的流线，集体换局部，得到基础背景层。</p>
+          <p>画面居中构图，希望视觉焦点在中心，有光感、体现未来感，因此手动在中心增加光感隧道，得到下图；</p>
+          <AigcProcessFigure imageNumber={11} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>添加人物：增强画面感召力、与员工的距离感</p>
+          <p>垫图很重要，是成功的一半，最后奔跑的垫图至关重要，能够很好的调整 MJ 出图人物奔跑的方向。</p>
+          <AigcProcessFigure imageNumber={12} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <div className="aigc-process-prompt">
+            <p>关键词</p>
+            <p>https://s.mj.run/4Y26eiKbFHA https://s.mj.run/IeTpinpeVBg https://s.mj.run/72sDA2675pg https://s.mj.run/U5iQePcnnyY A male runner wearing a blue purple sports suit running forward, Asian, with a back view, full body::1.2 exaggerated dynamics, 3D anime character style, high-definition, super details, background lighting, ultra long lens, white background --ar 5:8 --s 750 --iw 1.5</p>
+            <p>身着蓝紫色运动服的男性跑步者向前跑，亚洲人，背影，全身::1.2 夸张动态，3D 动漫人物风格，高清，超级细节，背景光照，超长镜头，白色背景 --ar 5:8 --s 750 --iw 1.5</p>
+          </div>
+          <p className="aigc-process-followup">多轮生成，得到以下 3 个动势较好的人物</p>
+          <AigcProcessFigure imageNumber={13} />
+        </section>
+
+        <section className="aigc-process-step is-major">
+          <p>将 3 个人物在 PS 中调节明暗、光影，并按照远近前后关系分布，拉大大小对比，营造更强的空间感；</p>
+          <AigcProcessFigure imageNumber={14} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>标题后的背景目前感觉比较空洞，希望能够融合业务，体现对未来和业务的想象空间，因此一个融合业务、产品的城市背景比较合适；通过合成拼接，得到以下一张较理想的图，但画质欠佳，需要提升分辨率，高清化处理</p>
+          <AigcProcessFigure imageNumber={15} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>使用 SD「tile diffusion / tiled VAE」将分辨率精准提升 4 倍，得到以下超高清图像：</p>
+          <AigcProcessFigure imageNumber={16} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>在 PS 中合成调整色彩，挑选了 3 个代表性的业务图标融入背景中，使整体画面与业务更贴合，画面逻辑性更加完整。</p>
+          <AigcProcessFigure imageNumber={17} />
+        </section>
+
+        <section className="aigc-process-step is-minor">
+          <p>选择一款结构方正厚重，笔画简洁有力字体作为基础字，放在 AI 中进行再设计，调整装笔画使整体字体细节更具创意与力量感。</p>
+          <p>放入视觉中整体排版，调整细节得到 KV 终稿如下：</p>
+          <AigcProcessFigure imageNumber={18} />
+        </section>
+      </div>
+    </article>
+  )
+}
+
 function ProjectDetailPage({ projectId }) {
   const project = projectDetails[projectId]
 
@@ -339,6 +516,15 @@ function ProjectDetailPage({ projectId }) {
       <main className="project-detail-page">
         <div className="project-detail-header"><SiteHeader fromWorks /></div>
         <MarketingDetail project={project} />
+      </main>
+    )
+  }
+
+  if (project.type === 'aigc-process') {
+    return (
+      <main className="project-detail-page">
+        <div className="project-detail-header"><SiteHeader fromWorks /></div>
+        <AigcProcessDetail project={project} />
       </main>
     )
   }

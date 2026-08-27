@@ -125,6 +125,11 @@ const categoryProjects = {
       image: '/assets/aigc/aigc-card-01.png',
       detailId: 'aigc-01',
     },
+    {
+      title: '年会主视觉AI辅助过程',
+      image: '/assets/aigc/aigc-card-yearly.png',
+      detailId: 'aigc-02',
+    },
   ],
 }
 

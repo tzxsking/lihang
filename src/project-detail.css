@@ -178,6 +178,83 @@
   display: block;
 }
 
+.aigc-process-detail {
+  width: min(900px, calc(100% - 40px));
+}
+
+.aigc-process-hero,
+.aigc-process-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.aigc-process-hero,
+.aigc-process-figure {
+  width: min(890px, 100%);
+  margin-inline: auto;
+}
+
+.aigc-process-intro,
+.aigc-process-flow {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+.aigc-process-intro {
+  margin-top: 47px;
+}
+
+.aigc-process-intro section + section {
+  margin-top: 55px;
+}
+
+.aigc-process-intro p,
+.aigc-process-intro section > div,
+.aigc-process-intro section > div p,
+.aigc-process-step p,
+.aigc-process-prompt {
+  margin: 0;
+}
+
+.aigc-process-label {
+  margin-bottom: 16px !important;
+}
+
+.aigc-process-label span {
+  font-size: 12px;
+}
+
+.aigc-process-flow {
+  margin-top: 55px;
+}
+
+.aigc-process-step.is-major {
+  margin-top: 55px;
+}
+
+.aigc-process-step.is-minor,
+.aigc-process-prompt,
+.aigc-process-followup {
+  margin-top: 16px !important;
+}
+
+.aigc-process-figure {
+  margin-top: 16px;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.aigc-process-figure + .aigc-process-figure {
+  margin-top: 16px;
+}
+
+.aigc-process-prompt {
+  overflow-wrap: anywhere;
+}
+
 .project-detail-missing {
   width: min(900px, calc(100% - 40px));
   margin-inline: auto;
@@ -267,5 +344,37 @@
 
   .marketing-detail-meta section + section {
     margin-top: 24px;
+  }
+
+  .aigc-process-detail {
+    width: min(100% - 28px, 560px);
+  }
+
+  .aigc-process-intro,
+  .aigc-process-flow {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .aigc-process-intro {
+    margin-top: 32px;
+  }
+
+  .aigc-process-intro section + section,
+  .aigc-process-flow,
+  .aigc-process-step.is-major {
+    margin-top: 32px;
+  }
+
+  .aigc-process-label {
+    margin-bottom: 12px !important;
+  }
+
+  .aigc-process-step.is-minor,
+  .aigc-process-prompt,
+  .aigc-process-followup,
+  .aigc-process-figure,
+  .aigc-process-figure + .aigc-process-figure {
+    margin-top: 12px !important;
   }
 }
