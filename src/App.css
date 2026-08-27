@@ -337,6 +337,7 @@ main {
   border: 0;
   border-radius: 15px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .experience {

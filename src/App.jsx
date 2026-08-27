@@ -138,10 +138,14 @@ function ProfileCard() {
         </div>
       </div>
 
-      <button className="resume-button" type="button" onClick={() => window.print()}>
+      <a
+        className="resume-button"
+        href={assetUrl('/resume-liu-hang.pdf')}
+        download="刘航-视觉设计简历.pdf"
+      >
         <Download size={17} />
         下载完整简历
-      </button>
+      </a>
     </aside>
   )
 }
