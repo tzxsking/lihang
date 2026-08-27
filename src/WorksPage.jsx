@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SiteHeader from './components/SiteHeader'
 import { appUrl, assetUrl } from './utils/paths'
 import './works.css'
 
 const categories = [
-  { id: 'visual', label: '视觉平面' },
-  { id: 'marketing', label: '营销运营' },
-  { id: 'package', label: '包装设计' },
-  { id: 'aigc', label: 'AIGC' },
+  { id: 'visual', label: '视觉平面', icon: '/assets/navigation/visual.svg' },
+  { id: 'marketing', label: '营销运营', icon: '/assets/navigation/marketing.svg' },
+  { id: 'package', label: '包装设计', icon: '/assets/navigation/package.svg' },
+  { id: 'aigc', label: 'AIGC', icon: '/assets/navigation/aigc.svg' },
 ]
 
 const workColumns = [
@@ -131,6 +132,71 @@ function responsiveImageSet(basePath, smallWidth, largeWidth) {
   return `${assetUrl(`${basePath}-${smallWidth}.webp`)} ${smallWidth}w, ${assetUrl(`${basePath}-${largeWidth}.webp`)} ${largeWidth}w`
 }
 
+const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+
+function DeferredImage({
+  src,
+  srcSet,
+  mobileSrcSet,
+  sizes,
+  width,
+  height,
+  alt,
+  eager = false,
+}) {
+  const imageRef = useRef(null)
+  const supportsDeferredLoading = typeof window !== 'undefined' && 'IntersectionObserver' in window
+  const [shouldLoad, setShouldLoad] = useState(eager || !supportsDeferredLoading)
+
+  useEffect(() => {
+    if (shouldLoad) return undefined
+
+    const image = imageRef.current
+    if (!image) return undefined
+
+    const scrollRoot = image.closest('.works-gallery-viewport, .category-project-grid')
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setShouldLoad(true)
+        observer.disconnect()
+      },
+      {
+        root: scrollRoot,
+        rootMargin: '480px 0px',
+        threshold: 0.01,
+      },
+    )
+
+    observer.observe(image)
+    return () => observer.disconnect()
+  }, [shouldLoad])
+
+  return (
+    <picture>
+      {mobileSrcSet ? (
+        <source
+          media="(max-width: 760px)"
+          srcSet={shouldLoad ? mobileSrcSet : undefined}
+          sizes={sizes}
+        />
+      ) : null}
+      <img
+        ref={imageRef}
+        src={shouldLoad ? src : transparentPixel}
+        srcSet={shouldLoad ? srcSet : undefined}
+        sizes={sizes}
+        width={width}
+        height={height}
+        alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchPriority={eager ? 'high' : undefined}
+        decoding="async"
+      />
+    </picture>
+  )
+}
+
 function imageName(path) {
   return path.split('/').pop().replace(/\.[^.]+$/, '')
 }
@@ -145,6 +211,7 @@ function getInitialFilter() {
 
 function WorksPage() {
   const [activeFilter, setActiveFilter] = useState(getInitialFilter)
+  const [sidebarExpanded, setSidebarExpanded] = useState(true)
   const featuredProjects = categoryProjects[activeFilter]
   const activeWorkColumns = activeFilter === 'other' ? otherWorkColumns : workColumns
 
@@ -154,27 +221,48 @@ function WorksPage() {
         <SiteHeader fromWorks />
       </div>
 
-      <div className="works-shell">
-        <nav className="works-sidebar" aria-label="作品分类">
-          {categories.map((category) => (
-            <button
-              className={
-                category.id === 'visual'
-                  ? ['all', 'other'].includes(activeFilter) ? 'is-active' : ''
-                  : activeFilter === category.id ? 'is-active' : ''
-              }
-              type="button"
-              aria-pressed={
-                category.id === 'visual'
-                  ? ['all', 'other'].includes(activeFilter)
-                  : activeFilter === category.id
-              }
-              onClick={() => setActiveFilter(category.id === 'visual' ? 'all' : category.id)}
-              key={category.id}
-            >
-              {category.label}
-            </button>
-          ))}
+      <div className={sidebarExpanded ? 'works-shell' : 'works-shell is-sidebar-collapsed'}>
+        <nav
+          className={sidebarExpanded ? 'works-sidebar' : 'works-sidebar is-collapsed'}
+          aria-label="作品分类"
+        >
+          <button
+            className="works-sidebar-toggle"
+            type="button"
+            aria-label={sidebarExpanded ? '收起作品分类' : '展开作品分类'}
+            aria-expanded={sidebarExpanded}
+            title={sidebarExpanded ? '收起作品分类' : '展开作品分类'}
+            onClick={() => setSidebarExpanded((expanded) => !expanded)}
+          >
+            {sidebarExpanded ? <ChevronLeft aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}
+          </button>
+
+          {categories.map((category) => {
+            const isActive = category.id === 'visual'
+              ? ['all', 'other'].includes(activeFilter)
+              : activeFilter === category.id
+
+            return (
+              <button
+                className={isActive ? 'works-category-button is-active' : 'works-category-button'}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActiveFilter(category.id === 'visual' ? 'all' : category.id)}
+                key={category.id}
+              >
+                <img
+                  className="works-category-icon"
+                  src={assetUrl(category.icon)}
+                  width={25}
+                  height={25}
+                  alt=""
+                  aria-hidden="true"
+                />
+                <span className="works-category-label">{category.label}</span>
+                <span className="works-category-tooltip" aria-hidden="true">{category.label}</span>
+              </button>
+            )
+          })}
         </nav>
 
         <section
@@ -188,15 +276,14 @@ function WorksPage() {
                 const card = (
                   <figure className="category-project-card">
                     <div className="category-project-card__image">
-                      <img
+                      <DeferredImage
                         src={assetUrl(`${optimizedBase}-340.webp`)}
                         srcSet={responsiveImageSet(optimizedBase, 340, 680)}
+                        mobileSrcSet={responsiveImageSet(optimizedBase, 340, 680)}
                         sizes="(max-width: 760px) calc(100vw - 60px), 340px"
                         width={340}
                         height={288}
                         alt={project.title}
-                        loading="lazy"
-                        decoding="async"
                       />
                     </div>
                     <figcaption>{project.title}</figcaption>
@@ -248,13 +335,16 @@ function WorksPage() {
                 <div className={activeFilter === 'other' ? 'works-gallery works-gallery--other' : 'works-gallery'}>
                   {activeWorkColumns.map((column, columnIndex) => (
                     <div className="work-column" key={`column-${columnIndex + 1}`}>
-                      {column.map((item, itemIndex) => {
+                      {column.map((item) => {
                         const isOtherWork = Boolean(item.image)
                         const id = isOtherWork ? item.id : `work-${String(item.id).padStart(2, '0')}`
                         const optimizedBase = `/assets/optimized/${isOtherWork ? 'other' : 'works'}/${id}`
                         const smallWidth = isOtherWork ? 180 : 360
                         const largeWidth = isOtherWork ? 275 : 640
-                        const isFirstInColumn = itemIndex === 0
+                        const isPrimaryWork = !isOtherWork && item.id === 1
+                        const mobileSrcSet = isOtherWork
+                          ? responsiveImageSet(optimizedBase, smallWidth, largeWidth)
+                          : `${assetUrl(`${optimizedBase}-${smallWidth}.webp`)} ${smallWidth}w`
 
                         return (
                           <figure
@@ -262,16 +352,15 @@ function WorksPage() {
                             style={{ aspectRatio: `275 / ${item.height}` }}
                             key={item.id}
                           >
-                            <img
+                            <DeferredImage
                               src={assetUrl(`${optimizedBase}-${smallWidth}.webp`)}
                               srcSet={responsiveImageSet(optimizedBase, smallWidth, largeWidth)}
+                              mobileSrcSet={mobileSrcSet}
                               sizes="(max-width: 760px) calc((100vw - 40px) / 2), 275px"
                               width={275}
                               height={item.height}
                               alt={item.alt || `刘航视觉设计作品 ${String(item.id).padStart(2, '0')}`}
-                              loading={isFirstInColumn ? 'eager' : 'lazy'}
-                              fetchPriority={isFirstInColumn ? 'high' : undefined}
-                              decoding="async"
+                              eager={isPrimaryWork}
                             />
                           </figure>
                         )
