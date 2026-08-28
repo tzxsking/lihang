@@ -59,6 +59,8 @@ const otherWorkColumns = [
     { id: 'other-01', height: 576, image: '/assets/other/other-01.png', alt: '高美基因宣传折页与产品资料设计' },
     { id: 'other-02', height: 337, image: '/assets/other/other-02.png', alt: '高美基因泛癌早筛大会展板设计' },
     { id: 'other-03', height: 151, image: '/assets/other/other-03.png', alt: '大宅名品联盟宣传设计' },
+    { id: 'other-10', height: 151, image: '/assets/other/other-10.png', alt: '第六空间周年庆全城家装节宣传设计' },
+    { id: 'other-11', height: 151, image: '/assets/other/other-11.png', alt: '第六空间首届全城家装节宣传设计' },
   ],
   [
     { id: 'other-04', height: 761, image: '/assets/other/other-04.png', alt: '品牌会员卡与商务物料设计' },
@@ -67,6 +69,7 @@ const otherWorkColumns = [
   [
     { id: 'other-06', height: 478, image: '/assets/other/other-06.png', alt: '红色品牌手册与宣传物料设计' },
     { id: 'other-07', height: 452, image: '/assets/other/other-07.png', alt: '高美基因数字产品界面设计' },
+    { id: 'other-12', height: 682, image: '/assets/other/other-12.png', alt: '高美基因检测产品包装设计' },
   ],
   [
     { id: 'other-08', height: 607, image: '/assets/other/other-08.png', alt: '高美基因产品手册与检测报告设计' },
@@ -87,7 +90,7 @@ const categoryProjects = {
       detailId: 'marketing-02',
     },
     {
-      title: '毛铺草本年份酒系列BANNER',
+      title: '20大品牌开业+巅峰盛典',
       image: '/assets/marketing/marketing-card-03.png',
       detailId: 'marketing-03',
     },
